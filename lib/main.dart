@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'api/http_service.dart';
 import 'model/movie_data.dart';
+import 'movie_card.dart';
 
 void main() {
   runApp(const MyApp());
@@ -79,45 +80,26 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            FutureBuilder<MovieData?>(
-                future: HttpService.discoverAPI(_counter),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Text(
-                      '${snapshot.data!.results![0].title}',
-                      style: Theme.of(context).textTheme.headline4,
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
-                  } else {
-                    return const CircularProgressIndicator();
-                  }
-                }),
-          ],
-        ),
-      ),
+          child: FutureBuilder<MovieData?>(
+              future: HttpService.discoverAPI(_counter),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                    itemCount: snapshot.data!.results!.length,
+                    itemBuilder: (context, index) {
+                      return MovieCard(
+                      title: snapshot.data!.results![index].title ?? "",
+                      releaseDate: snapshot.data!.results![index].releaseDate ?? "",
+                      posterUrl: snapshot.data!.results![index].posterPath ?? "",
+                      overview: snapshot.data!.results![index].overview ?? "",
+                      voteAverage: snapshot.data!.results![index].voteAverage ?? 0);
+                  });
+                } else if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              })),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
         tooltip: 'Increment',
