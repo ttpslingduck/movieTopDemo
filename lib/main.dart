@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import 'api/http_service.dart';
+import 'model/movie_data.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -48,7 +51,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  int _counter = 1;
 
   void _incrementCounter() {
     setState(() {
@@ -98,10 +101,20 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               'You have pushed the button this many times:',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+            FutureBuilder<MovieData?>(
+                future: HttpService.discoverAPI(_counter),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Text(
+                      '${snapshot.data!.results![0].title}',
+                      style: Theme.of(context).textTheme.headline4,
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  } else {
+                    return const CircularProgressIndicator();
+                  }
+                }),
           ],
         ),
       ),
