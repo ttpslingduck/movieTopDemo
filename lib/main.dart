@@ -35,6 +35,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 1;
+  String sort = 'desc';
 
   void _incrementCounter() {
     setState(() {
@@ -64,33 +65,76 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-          child: FutureBuilder<MovieData?>(
-              future: HttpService.discoverAPI(_counter),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                      itemCount: snapshot.data!.results!.length,
-                      itemBuilder: (context, index) {
-                        return MovieCard(
-                            title: snapshot.data!.results![index].title ?? "",
-                            releaseDate:
-                                snapshot.data!.results![index].releaseDate ??
-                                    "",
-                            posterUrl:
-                                snapshot.data!.results![index].posterPath ?? "",
-                            overview:
-                                snapshot.data!.results![index].overview ?? "",
-                            voteAverage:
-                                snapshot.data!.results![index].voteAverage ??
-                                    0);
-                      });
-                } else if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
-                } else {
-                  return const CircularProgressIndicator();
-                }
-              })),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "熱門電影",
+                  style: Theme.of(context).textTheme.headline4,
+                ),
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          sort = 'desc';
+                        });
+                      },
+                      child: const Text("按人氣升序"),
+                    ),
+                    SizedBox(width: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          sort = 'asc';
+                        });
+                      },
+                      child: const Text("按人氣降序"),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Center(
+                child: FutureBuilder<MovieData?>(
+                    future: HttpService.discoverAPI(_counter, sort),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                            itemCount: snapshot.data!.results!.length,
+                            itemBuilder: (context, index) {
+                              return MovieCard(
+                                  title: snapshot.data!.results![index].title ??
+                                      "",
+                                  releaseDate: snapshot
+                                          .data!.results![index].releaseDate ??
+                                      "",
+                                  posterUrl: snapshot
+                                          .data!.results![index].posterPath ??
+                                      "",
+                                  overview:
+                                      snapshot.data!.results![index].overview ??
+                                          "",
+                                  voteAverage: snapshot
+                                          .data!.results![index].voteAverage ??
+                                      0);
+                            });
+                      } else if (snapshot.hasError) {
+                        return Text('${snapshot.error}');
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
+                    })),
+          ),
+        ],
+      ),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -107,7 +151,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-
       bottomNavigationBar: BottomAppBar(
         color: Colors.blue, // 設定背景色為藍色
         shape: const CircularNotchedRectangle(),
@@ -127,8 +170,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-
-      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

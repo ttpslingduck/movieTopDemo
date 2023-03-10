@@ -6,8 +6,8 @@ import 'package:http/http.dart';
 
 class HttpService {
   /// Discover API
-  static Future<MovieData?> discoverAPI(int page) async {
-    String url = '${BackendAPI.apiHost}${page.toString()}';
+  static Future<MovieData?> discoverAPI(int page, [String sort = 'desc']) async {
+    String url = '${BackendAPI.apiHost}&sort_by=popularity.$sort&page=${page.toString()}';
 
     Response? response;
     response = await get(Uri.parse(url));

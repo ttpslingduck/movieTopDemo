@@ -38,15 +38,19 @@ class MovieCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 ClipRRect(
-                  // 調整圖片的邊角弧度
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(8.0),
-                    bottomLeft: Radius.circular(8.0),
-                  ),
-                  child: Image.network(
-                    "https://image.tmdb.org/t/p/original$posterUrl",
-                  ),
-                ),
+                    // 調整圖片的邊角弧度
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(8.0),
+                      bottomLeft: Radius.circular(8.0),
+                    ),
+                    child: AspectRatio(
+                      aspectRatio: 0.8,
+                      child: Image.network(
+                              image(),
+                              fit: BoxFit.fill,
+                            ),
+                    )
+                        ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Column(
@@ -121,5 +125,13 @@ class MovieCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  image() {
+    if (posterUrl.isNotEmpty) {
+      return 'https://image.tmdb.org/t/p/original$posterUrl';
+    } else {
+      return 'https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=';
+    }
   }
 }
