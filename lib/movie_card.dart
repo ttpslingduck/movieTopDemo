@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class MovieCard extends StatelessWidget {
   final String title;
@@ -38,13 +37,14 @@ class MovieCard extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                ClipRRect( // 調整圖片的邊角弧度
+                ClipRRect(
+                  // 調整圖片的邊角弧度
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(8.0),
                     bottomLeft: Radius.circular(8.0),
                   ),
                   child: Image.network(
-                    "https://image.tmdb.org/t/p/original$posterUrl",                    
+                    "https://image.tmdb.org/t/p/original$posterUrl",
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -53,59 +53,7 @@ class MovieCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      overview.isNotEmpty
-                          ? Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    title,
-                                    style: const TextStyle(
-                                      fontSize: 28.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4.0),
-                                  Text(
-                                    releaseDate,
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                  Expanded(
-                                    child: Center(
-                                      child: Text(
-                                        overview,
-                                        style: const TextStyle(fontSize: 18),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        softWrap: true,
-                                        textAlign: TextAlign.justify,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )
-                          : Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    title,
-                                    style: const TextStyle(
-                                      fontSize: 28.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4.0),
-                                  Text(
-                                    releaseDate,
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                ],
-                              ),
-                            ),
+                      overview.isNotEmpty ? hasDescCard() : noDescCard()
                     ],
                   ),
                 ),
@@ -115,6 +63,63 @@ class MovieCard extends StatelessWidget {
         ),
       ),
     );
-    
+  }
+
+  Widget hasDescCard() {
+    return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 28.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4.0),
+          Text(
+            releaseDate,
+            style: const TextStyle(fontSize: 16),
+          ),
+          Expanded(
+            child: Center(
+              child: Text(
+                overview,
+                style: const TextStyle(fontSize: 18),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true,
+                textAlign: TextAlign.justify,
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget noDescCard() {
+    return Expanded(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 28.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4.0),
+          Text(
+            releaseDate,
+            style: const TextStyle(fontSize: 16),
+          ),
+        ],
+      ),
+    );
   }
 }
