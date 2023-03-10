@@ -83,6 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       onPressed: () {
                         setState(() {
                           sort = 'desc';
+                          _counter = 1;
                         });
                       },
                       child: const Text("按人氣升序"),
@@ -92,6 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       onPressed: () {
                         setState(() {
                           sort = 'asc';
+                          _counter = 1;
                         });
                       },
                       child: const Text("按人氣降序"),
